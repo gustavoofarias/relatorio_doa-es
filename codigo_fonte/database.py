@@ -27,15 +27,3 @@ class Database:
     def close_all_connections(self):
         """Fecha todas as conexões do pool."""
         self.connection_pool.closeall()
-
-        
-'''   
-conn = psycopg2.connect(
-    host="dizimei-dev.cbeoqj4emryb.us-east-1.rds.amazonaws.com",
-    port=5432,
-    user="gustavo",
-    password="IlK5qZ54429Q",
-    dbname="dizimei"
-)
-
-'''

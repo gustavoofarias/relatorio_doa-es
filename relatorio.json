@@ -1,0 +1,126 @@
+{
+  "total": 7,
+  "page": 1,
+  "limit": 10,
+  "donations": [
+    {
+      "id": 37,
+      "createdAt": "2025-02-03T21:20:46.591000Z",
+      "netAmountChurch": "2.00",
+      "status": "approved",
+      "paymentMethod": "credit-card",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    },
+    {
+      "id": 33,
+      "createdAt": "2025-01-31T23:26:16.216000Z",
+      "netAmountChurch": "1.00",
+      "status": "approved",
+      "paymentMethod": "pix",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    },
+    {
+      "id": 32,
+      "createdAt": "2025-01-31T22:41:57.388000Z",
+      "netAmountChurch": "1.00",
+      "status": "approved",
+      "paymentMethod": "pix",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    },
+    {
+      "id": 31,
+      "createdAt": "2025-01-31T22:35:34.743000Z",
+      "netAmountChurch": "3.00",
+      "status": "approved",
+      "paymentMethod": "pix",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    },
+    {
+      "id": 30,
+      "createdAt": "2025-01-31T22:32:51.538000Z",
+      "netAmountChurch": "3.00",
+      "status": "approved",
+      "paymentMethod": "pix",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    },
+    {
+      "id": 29,
+      "createdAt": "2025-01-31T22:27:12.539000Z",
+      "netAmountChurch": "3.00",
+      "status": "approved",
+      "paymentMethod": "pix",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    },
+    {
+      "id": 27,
+      "createdAt": "2025-01-30T15:17:07.071000Z",
+      "netAmountChurch": "2.00",
+      "status": "approved",
+      "paymentMethod": "credit-card",
+      "church": {
+        "id": 1,
+        "name": "Igreja Nova Missão",
+        "username": "igreja-nova-esperanca"
+      },
+      "user": {
+        "id": 2,
+        "name": "Kalebe Almeida",
+        "email": "kalebe.nathanael181@gmail.com"
+      }
+    }
+  ]
+}

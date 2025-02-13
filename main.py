@@ -1,29 +1,11 @@
 from codigo_fonte.database import Database
-from codigo_fonte.services import DynamicReportService
+from codigo_fonte.services import DonationService
 import json
 
-def mostrar_menu_tabelas():
-    print("\nEscolha a tabela para o relatório:")
-    print("1. Doações (donations)")
-    print("2. Igrejas (churches)")
-    print("3. Saques (withdrawals)")
-    print("4. Usuários (users)")
-    print("5. Sair")
-
-def obter_colunas(tabela):
-    """
-    Retorna as colunas disponíveis para a tabela escolhida.
-    """
-    if tabela == "donations":
-        return ["id", "amount", "payment_method", "status", "created_at", "user_id", "church_id"]
-    elif tabela == "churches":
-        return ["id", "name", "cnpj", "manager_id", "created_at"]
-    elif tabela == "withdrawals":
-        return ["id", "amount", "status", "created_at", "manager_id"]
-    elif tabela == "users":
-        return ["id", "full_name", "email", "created_at"]
-    else:
-        return []
+def mostrar_menu():
+    print("\n--- Relatório de Doações ---")
+    print("1. Buscar Doações")
+    print("2. Sair")
 
 def obter_filtros():
     """
@@ -31,58 +13,47 @@ def obter_filtros():
     """
     filters = {}
     print("\n--- Filtros Personalizados ---")
-    while True:
-        coluna = input("Digite o nome da coluna para filtrar (ou deixe em branco para parar): ")
-        if not coluna:
-            break
-        valor = input(f"Digite o valor para filtrar na coluna '{coluna}': ")
-        filters[coluna] = valor
+    filters["start_date"] = input("Data inicial (YYYY-MM-DD, deixe em branco para ignorar): ") or None
+    filters["end_date"] = input("Data final (YYYY-MM-DD, deixe em branco para ignorar): ") or None
+    filters["payment_method"] = input("Método de pagamento (deixe em branco para ignorar): ") or None
+    filters["status"] = input("Status (deixe em branco para ignorar): ") or None
+    filters["search_text"] = input("Busca livre (nome, e-mail ou igreja, deixe em branco para ignorar): ") or None
+    filters["limit"] = int(input("Número máximo de registros por página: "))
+    filters["offset"] = int(input("Número de registros a ignorar (offset): "))
     return filters
 
 def main():
     # Configuração do banco de dados
     db = Database()
+    service = DonationService(db)
 
     while True:
-        mostrar_menu_tabelas()
+        mostrar_menu()
         escolha = input("Digite o número da opção desejada: ")
 
-        if escolha == "5":
+        if escolha == "2":
             print("Saindo...")
             break
 
-        tabelas = ["donations", "churches", "withdrawals", "users"]
-        if escolha in ["1", "2", "3", "4"]:
-            tabela = tabelas[int(escolha) - 1]
-            colunas = obter_colunas(tabela)
+        elif escolha == "1":
+            manager_id = int(input("Digite o ID do manager: "))
+            filters = obter_filtros()
 
-            print(f"\nColunas disponíveis para a tabela '{tabela}': {', '.join(colunas)}")
-            colunas_selecionadas = input("Digite as colunas desejadas (separadas por vírgula): ").split(",")
-            colunas_selecionadas = [col.strip() for col in colunas_selecionadas if col.strip() in colunas]
+            # Buscar doações
+            resultado = service.get_filtered_donations(manager_id, filters)
 
-            filtros = obter_filtros()
+            # Exibir resultados
+            print("\n--- Resultados ---")
+            print(json.dumps(resultado, indent=2))
 
-            ordenacao = input("Digite a coluna para ordenação (ex.: 'created_at DESC'): ")
-            limite = int(input("Digite o número máximo de registros por página: "))
-            offset = int(input("Digite o número de registros a ignorar (offset): "))
+            # Salvar resultados em um arquivo JSON
+            salvar = input("\nDeseja salvar os resultados em um arquivo JSON? (s/n): ").lower()
+            if salvar == "s":
+                nome_arquivo = input("Digite o nome do arquivo (ex.: relatorio.json): ")
+                with open(nome_arquivo, "w", encoding="utf-8") as json_file:
+                    json.dump(resultado, json_file, indent=2, ensure_ascii=False)
+                print(f"Relatório salvo em '{nome_arquivo}'.")
 
-            # Gerar o relatório
-            service = DynamicReportService(db)
-            relatorio = service.generate_dynamic_report(
-                table=tabela,
-                columns=colunas_selecionadas,
-                filters=filtros,
-                order_by=ordenacao,
-                limit=limite,
-                offset=offset
-            )
-
-            # Salvar o relatório em um arquivo JSON
-            nome_arquivo = f"relatorio_{tabela}.json"
-            with open(nome_arquivo, "w", encoding="utf-8") as json_file:
-                json.dump(relatorio, json_file, indent=2, ensure_ascii=False)
-
-            print(f"\nRelatório salvo em '{nome_arquivo}'.")
         else:
             print("Opção inválida. Tente novamente.")
 
