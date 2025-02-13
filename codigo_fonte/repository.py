@@ -1,5 +1,4 @@
 import psycopg2
-from .database import Database
 
 class DonationRepository:
     def __init__(self, db):
@@ -8,16 +7,6 @@ class DonationRepository:
     def get_donations(self, manager_id, start_date=None, end_date=None, payment_method=None, status=None, search_text=None, limit=10, offset=0):
         """
         Busca as doações com base nos filtros fornecidos.
-
-        :param manager_id: ID do manager para filtrar as doações.
-        :param start_date: Data inicial do período (opcional).
-        :param end_date: Data final do período (opcional).
-        :param payment_method: Método de pagamento para filtrar (opcional).
-        :param status: Status da doação para filtrar (opcional).
-        :param search_text: Texto para busca livre (opcional).
-        :param limit: Número máximo de registros por página.
-        :param offset: Número de registros a serem ignorados (para paginação).
-        :return: Lista de doações.
         """
         query = """
         SELECT 
@@ -87,6 +76,75 @@ class DonationRepository:
                 })
 
             return donations
+        except psycopg2.Error as e:
+            print(f"Erro ao executar a query: {e}")
+            return []
+        finally:
+            cursor.close()
+            self.db.release_connection(connection)
+
+
+class DynamicReportRepository:
+    def __init__(self, db):
+        self.db = db
+
+    def build_dynamic_query(self, table, columns, filters, order_by, limit, offset):
+        """
+        Constrói uma query SQL dinamicamente com base nos parâmetros fornecidos.
+        """
+        # Seleção das colunas
+        selected_columns = ", ".join(columns)
+
+        # Construção dos filtros
+        filter_clauses = []
+        params = {}
+        for key, value in filters.items():
+            if value is not None:
+                filter_clauses.append(f"{key} = %({key})s")
+                params[key] = value
+
+        where_clause = " AND ".join(filter_clauses) if filter_clauses else "1=1"
+
+        # Construção da query
+        query = f"""
+        SELECT 
+            {selected_columns}
+        FROM 
+            {table}
+        WHERE 
+            {where_clause}
+        ORDER BY 
+            {order_by}
+        LIMIT %(limit)s OFFSET %(offset)s;
+        """
+
+        # Adiciona limit e offset aos parâmetros
+        params["limit"] = limit
+        params["offset"] = offset
+
+        return query, params
+
+    def execute_dynamic_query(self, table, columns, filters, order_by, limit, offset):
+        """
+        Executa uma query dinâmica e retorna os resultados.
+        """
+        query, params = self.build_dynamic_query(table, columns, filters, order_by, limit, offset)
+
+        connection = self.db.get_connection()
+        cursor = connection.cursor()
+        try:
+            cursor.execute(query, params)
+            results = cursor.fetchall()
+
+            # Formatar os resultados
+            rows = []
+            for row in results:
+                row_dict = {}
+                for i, column in enumerate(columns):
+                    row_dict[column] = row[i]
+                rows.append(row_dict)
+
+            return rows
         except psycopg2.Error as e:
             print(f"Erro ao executar a query: {e}")
             return []
