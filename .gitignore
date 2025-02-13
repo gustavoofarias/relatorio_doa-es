@@ -1,0 +1,15 @@
+
+---
+
+#### **9. `.gitignore`**
+Arquivos ignorados pelo Git.
+
+```plaintext
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+.env
+venv/
